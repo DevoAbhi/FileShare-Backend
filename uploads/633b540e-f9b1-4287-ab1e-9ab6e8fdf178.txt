@@ -1,0 +1,19 @@
+In this episode of Linux and Kernel Development Masterclass, we are geared up for a lot of things!
+=================================================================================
+Speaker Details:-
+1. Aishwarya Barik, 2nd-year student, and a Linux enthusiast.
+2. Ryan Das, 3rd-year student, and a Linux enthusiast.
+3. Rishiraj Acharya, MLE: TeamCognito, Lannet Technologies, Dynopii.
+4. Poulami Das, Competitive coder with 3 star on Codechef
+5. Bhaskar Dutta, a guest speaker, advocator of Blockchain
+6. Professor Uttam Kumar Mondal, sharing his knowledge on Shell Programming and Scripting and its academic prospects.
+=================================================================================
+
+Presentation links :-
+
+1) Competitive Programming Guide - https://docs.google.com/presentation/d/1qAj1_ZPpokSLpopxzyNG3WzLcuCf3OTI2niYJ7R-Yv4/edit?usp=sharing
+2) Blockchain Development - https://www.canva.com/design/DAEjHE0I_a0/ricsH1nNRNdYJo49QLcn_w/view?utm_content=DAEjHE0I_a0&utm_campaign=designshare&utm_medium=link&utm_source=sharebutton
+
+IS THERE ANY WAY TO GET SIR'S PPT?
+=================================================================================
+Join in with us again on - 03/07/2021 i.e. next Saturday.
