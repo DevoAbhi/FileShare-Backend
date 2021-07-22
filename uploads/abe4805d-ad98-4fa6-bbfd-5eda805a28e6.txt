@@ -1,4 +1,0 @@
-SMTP_SERVER = smtp-relay.sendinblue.com
-SMTP_PORT = 587
-MAIL_USER = abhinabroy2001@gmail.com
-MAIL_PASS = Ivt6Ga1x0b3YnRrN
