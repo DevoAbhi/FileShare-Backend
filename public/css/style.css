@@ -1,12 +1,12 @@
 :root {
-    --main-bg-color: #edf5fe;
-    --light-blue: #03a9f4;
-    --dark-blue: #028bca;
+    --base-bg-color: linear-gradient(to right, #ffecec, #f5d0d0);
+    --light-red: #ff5858;
+    --dark-red: #ff4d4d;
   }
 
   body {
     font-family: system-ui;
-    background: var(--main-bg-color);
+    background: var(--base-bg-color);
     height: 98vh;
     overflow: hidden;
     display: flex;
@@ -42,7 +42,7 @@ section.download {
     font-size: 18px;
     padding: 8px 40px;
     margin-top: 15px;
-    background: var(--light-blue);
+    background: var(--light-red);
     text-decoration: none;
     border: none;
     border-radius: 5px;
@@ -52,5 +52,5 @@ section.download {
   }
 
   .send-btn-container a:hover {
-      background: var(--dark-blue);
+      background: var(--dark-red);
   }
