@@ -55,6 +55,9 @@ exports.postUploadFiles = async (req, res, next) => {
 
 exports.sendEmail = async (req, res) => {
     const { uuid, emailFrom, emailTo } = req.body;
+    console.log(uuid)
+    console.log(emailFrom)
+    console.log(emailTo)
 
     if(!uuid || !emailFrom || !emailTo) {
         return res.status(422).json({
@@ -64,6 +67,11 @@ exports.sendEmail = async (req, res) => {
 
     // Get file from database
     const file = await File.findOne({uuid: uuid});
+    if(!file) {
+        return res.status(404).json({
+            error: "uuid does not exists"
+        })
+    }
 
     // So as to not send email twice
     if((file.receiver).includes(emailTo)){
@@ -78,10 +86,10 @@ exports.sendEmail = async (req, res) => {
     })
 
     try{
-        for(const emailFrom of trimmedReceivers){
+        const sendMail = require('../services/sendMailService');
+        const emailTemplate = require('../services/emailTemplate');
+        for(const emailTo of trimmedReceivers){
             // Send Email
-            const sendMail = require('../services/sendMailService');
-            const emailTemplate = require('../services/emailTemplate');
             const mailPayload = {
                 from: `FileShare <${emailFrom}>`,
                 to: emailTo,
@@ -108,7 +116,15 @@ exports.sendEmail = async (req, res) => {
     }
     catch(err){
         return res.status(500).json({
-            message: "Something went wrong while sending email!"
+            error: "Something went wrong while sending email!"
         })
     } 
 }
+
+// exports.delete = async (req, res) => {
+//     await File.deleteMany({filename: {$exists: true}})
+
+//     return res.status(200).json({
+//         message: "Faad dia bidu!"
+//     })
+// }
