@@ -120,11 +120,3 @@ exports.sendEmail = async (req, res) => {
         })
     } 
 }
-
-// exports.delete = async (req, res) => {
-//     await File.deleteMany({filename: {$exists: true}})
-
-//     return res.status(200).json({
-//         message: "Faad dia bidu!"
-//     })
-// }

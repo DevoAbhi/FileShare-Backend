@@ -1,5 +1,7 @@
 const express = require('express')
 const path = require('path')
+const schedule = require('node-schedule');
+const schedulerJob = require('./services/scheduler')
 
 // Initializing app
 const app = express();
@@ -14,7 +16,6 @@ app.set('view engine', 'ejs');
 
 // Public configuration
 app.use(express.static('public'))
-
 
 // Import routes
 const filesRoutes = require('./routes/files')
@@ -40,6 +41,11 @@ app.use('/file/download', downloadRoutes)
 // Importing database config
 const connectDB = require("./config/db");
 connectDB();
+
+// Run Cron Jobs
+schedule.scheduleJob('0 0 * * *', () => {
+    schedulerJob.deleteUploads()
+})
 
 const PORT = process.env.PORT || 3000;
 
