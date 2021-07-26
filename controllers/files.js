@@ -43,6 +43,8 @@ exports.postUploadFiles = async (req, res, next) => {
         // Initialize adm-zip package
         const admZip = new AdmZip();
 
+        let index = 0;
+        let response;
         for (const file of req.files) {
 
             // Only add files to zip if they are greater than 1
@@ -50,6 +52,28 @@ exports.postUploadFiles = async (req, res, next) => {
                 // Add files in zip
                 const filePath = `${__dirname}/../${file.path}`;
                 admZip.addLocalFile(filePath)
+            }
+
+            if(req.files.length > 1 && index === (req.files.length-1)) {
+                // Save zip file in uploads folder
+                const zipFileName = `${uuidv4()}.zip`;
+                const uploadsZipPath = `uploads/${zipFileName}`
+                const zipFilePath = `${__dirname}/../${uploadsZipPath}`;
+                admZip.writeZip(zipFilePath);
+
+                // Store in Database
+                const dbFile = new File({
+                    filename: file.filename,
+                    uuid: uuidv4(),
+                    path: file.path,
+                    zipPath: uploadsZipPath,
+                    size: file.size
+                })
+        
+                response = await dbFile.save();
+                console.log(response)
+
+                break;
             }
 
             // Store in Database
@@ -60,27 +84,20 @@ exports.postUploadFiles = async (req, res, next) => {
                 size: file.size
             })
     
-            const response = await dbFile.save();
+            response = await dbFile.save();
             console.log(response)
-    
-        }
 
-        if(req.files.length > 1) {
-            // Save zip file in uploads folder
-            const zipFileName = `${uuidv4()}.zip`;
-            const zipFilePath = `${__dirname}/../uploads/${zipFileName}`;
-            admZip.writeZip(zipFilePath);
+            index += 1;
         }
 
         // Response -> Link
-        // return res.status(200).json({
-        //     file: `${process.env.APP_BASE_URL}/files/${response.uuid}`,
-        //     progress: 100
-        // })
-
         return res.status(200).json({
-            success: true
+            file: `${process.env.APP_BASE_URL}/files/${response.uuid}`,
+            progress: 100
         })
+        // return res.status(200).json({
+        //     success: true
+        // })
 
     })
 }

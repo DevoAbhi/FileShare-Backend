@@ -7,9 +7,16 @@ exports.downloadFile = async (req, res) => {
             return res.render("download", {error: "Link has been expired!"})
         }
 
-        // download file
-        const filePath = `${__dirname}/../${file.path}`;
-        res.download(filePath);
+        if('zipPath' in file){
+            // download zip
+            const filePath = `${__dirname}/../${file.zipPath}`;
+            res.download(filePath);
+        }
+        else{
+            // download file
+            const filePath = `${__dirname}/../${file.path}`;
+            res.download(filePath);
+        }
     }
     catch(err) {
         return res.render("download", {error: "Something went wrong"})
