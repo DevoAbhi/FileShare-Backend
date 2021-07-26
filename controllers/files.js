@@ -3,6 +3,7 @@ const multer = require('multer')
 const { v4: uuidv4 } = require('uuid')
 const path = require('path');
 const File = require('../models/file')
+const AdmZip = require('adm-zip');
 
 let storage = multer.diskStorage({
     destination: (req, file, cb) => cb(null, 'uploads/'),
@@ -12,17 +13,22 @@ let storage = multer.diskStorage({
     }
 })
 
+// let upload = multer({
+//     storage,
+//     limits: { fileSize: 100000000}
+// }).single('myfile')
+
 let upload = multer({
     storage,
     limits: { fileSize: 100000000}
-}).single('myfile')
+}).array('myfile', 30)
 
 exports.postUploadFiles = async (req, res, next) => {
     
     // Store file
     upload(req, res, async (err) => {
         // Validate request
-        if(!req.file) {
+        if(!req.files) {
             return res.status(400).json({
                 error: "All fields are required!"
             })
@@ -33,21 +39,47 @@ exports.postUploadFiles = async (req, res, next) => {
                 message: "There was a problem uploading file!"
             })
         }
-        // Store in Database
-        const file = new File({
-            filename: req.file.filename,
-            uuid: uuidv4(),
-            path: req.file.path,
-            size: req.file.size
-        })
 
-        const response = await file.save();
-        console.log(response)
+        // Initialize adm-zip package
+        const admZip = new AdmZip();
+
+        for (const file of req.files) {
+
+            // Only add files to zip if they are greater than 1
+            if(req.files.length > 1) {
+                // Add files in zip
+                const filePath = `${__dirname}/../${file.path}`;
+                admZip.addLocalFile(filePath)
+            }
+
+            // Store in Database
+            const dbFile = new File({
+                filename: file.filename,
+                uuid: uuidv4(),
+                path: file.path,
+                size: file.size
+            })
+    
+            const response = await dbFile.save();
+            console.log(response)
+    
+        }
+
+        if(req.files.length > 1) {
+            // Save zip file in uploads folder
+            const zipFileName = `${uuidv4()}.zip`;
+            const zipFilePath = `${__dirname}/../uploads/${zipFileName}`;
+            admZip.writeZip(zipFilePath);
+        }
 
         // Response -> Link
+        // return res.status(200).json({
+        //     file: `${process.env.APP_BASE_URL}/files/${response.uuid}`,
+        //     progress: 100
+        // })
+
         return res.status(200).json({
-            file: `${process.env.APP_BASE_URL}/files/${response.uuid}`,
-            progress: 100
+            success: true
         })
 
     })
