@@ -10,9 +10,20 @@ exports.deleteUploads = async () => {
 
         for (const file of files) {
             try{
-                fs.unlinkSync(file.path);
-                await File.deleteOne({path: file.path});
-                console.log("Successfully deleted file -> ", file.filename)
+                if(file.zipName !== undefined && file.zipSize !== undefined) {
+                    // delete zipped file
+                    fs.unlinkSync(file.zipPath);
+                    // delete file
+                    fs.unlinkSync(file.path);
+                    
+                    await File.deleteOne({path: file.zipPath});
+                    console.log("Successfully deleted file -> ", file.zipName)
+                }
+                else{
+                    fs.unlinkSync(file.path);
+                    await File.deleteOne({path: file.path});
+                    console.log("Successfully deleted file -> ", file.filename)
+                }
             }
             catch(err) {
                 console.log("Error while deleting files \n", err)

@@ -7,7 +7,7 @@ exports.downloadFile = async (req, res) => {
             return res.render("download", {error: "Link has been expired!"})
         }
 
-        if('zipPath' in file){
+        if(file.zipPath !== undefined){
             // download zip
             const filePath = `${__dirname}/../${file.zipPath}`;
             res.download(filePath);
