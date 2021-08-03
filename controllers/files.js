@@ -45,13 +45,15 @@ exports.postUploadFiles = async (req, res, next) => {
 
         let index = 0;
         let response;
+        let zipSize = 0;
         for (const file of req.files) {
 
             // Only add files to zip if they are greater than 1
             if(req.files.length > 1) {
                 // Add files in zip
                 const filePath = `${__dirname}/../${file.path}`;
-                admZip.addLocalFile(filePath)
+                admZip.addLocalFile(filePath);
+                zipSize += file.size;
             }
 
             if(req.files.length > 1 && index === (req.files.length-1)) {
@@ -66,7 +68,9 @@ exports.postUploadFiles = async (req, res, next) => {
                     filename: file.filename,
                     uuid: uuidv4(),
                     path: file.path,
+                    zipName: zipFileName,
                     zipPath: uploadsZipPath,
+                    zipSize: zipSize,
                     size: file.size
                 })
         

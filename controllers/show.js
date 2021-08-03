@@ -6,12 +6,26 @@ exports.getFile = async (req, res) => {
         if(!file) {
             return res.render('download', { error: "The link has been expired!" })
         }
-        return res.render('download', {
-            uuid: file.uuid,
-            fileName: file.filename,
-            fileSize: file.size,
-            downloadLink: `${process.env.APP_BASE_URL}/file/download/${file.uuid}`
-        })
+
+        // If the file is zipped, then return this
+        if(file.zipName !== undefined && file.zipSize !== undefined) {
+            return res.render('download', {
+                uuid: file.uuid,
+                fileName: file.zipName,
+                fileSize: file.zipSize,
+                downloadLink: `${process.env.APP_BASE_URL}/file/download/${file.uuid}`
+            })
+        }
+
+        // Else, return this for normal file
+        else{
+            return res.render('download', {
+                uuid: file.uuid,
+                fileName: file.filename,
+                fileSize: file.size,
+                downloadLink: `${process.env.APP_BASE_URL}/file/download/${file.uuid}`
+            })
+        }
 
     }
     catch(err) {
