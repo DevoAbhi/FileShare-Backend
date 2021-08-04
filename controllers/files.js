@@ -107,16 +107,15 @@ exports.postUploadFiles = async (req, res, next) => {
 }
 
 exports.sendEmail = async (req, res) => {
-    const { uuid, emailFrom, emailTo } = req.body;
-    console.log(uuid)
-    console.log(emailFrom)
-    console.log(emailTo)
+    const { uuid, emailFrom, emailTo, time } = req.body;
 
     if(!uuid || !emailFrom || !emailTo) {
         return res.status(422).json({
             error: "All fields are required!"
         })
     }
+    console.log(uuid)
+    console.log(time)
 
     // Get file from database
     const file = await File.findOne({uuid: uuid});
@@ -155,8 +154,19 @@ exports.sendEmail = async (req, res) => {
                     expires: "24 hours"
                 })
             }
-            
-            sendMail(mailPayload)
+
+            if(time !== undefined) {
+                const dateTime = new Date(time);
+                console.log(dateTime.getTime())
+                const deliverTime = dateTime.getTime() - Date.now();
+                console.log(deliverTime)
+                setTimeout(() => {
+                    sendMail(mailPayload)
+                }, deliverTime)
+            }
+            else{
+                sendMail(mailPayload)
+            }
         }
         
         const allReceivers = file.receiver.concat(trimmedReceivers)
